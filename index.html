@@ -6,323 +6,298 @@
   <title>サッカーコーチAI ⚽</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --green: #1a6b3a;
-      --green-light: #d4edda;
-      --green-mid: #2d8a52;
-      --yellow: #f5c518;
-      --bg: #f7f8f5;
+      --green: #00a550;
+      --green-dark: #007a3d;
+      --green-light: #e6f7ef;
+      --yellow: #ffd700;
+      --orange: #ff6b35;
+      --blue: #0066cc;
+      --red: #e63946;
+      --bg: #f0f9f4;
       --card: #ffffff;
-      --text: #1a1a1a;
-      --text-sub: #666;
-      --border: #e0e0e0;
-      --radius: 14px;
-      --radius-sm: 8px;
+      --text: #1a1a2e;
+      --text-sub: #5a6a7a;
+      --border: #d4e8da;
+      --radius: 16px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 20px rgba(0,165,80,0.12);
     }
-
     body {
       font-family: -apple-system, 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
     }
-
-    .app {
-      max-width: 430px;
-      margin: 0 auto;
-      padding: 0 0 2rem;
-    }
-
-    /* SCREENS */
+    .app { max-width: 430px; margin: 0 auto; padding-bottom: 2rem; }
     .screen { display: none; }
     .screen.active { display: block; }
 
-    /* HEADER */
+    /* HERO */
     .hero {
-      background: linear-gradient(135deg, #1a6b3a 0%, #2d8a52 100%);
-      padding: 1.5rem 1.25rem 1.25rem;
+      background: linear-gradient(135deg, #00a550 0%, #007a3d 60%, #005a2d 100%);
+      padding: 1.75rem 1.25rem 2rem;
       color: white;
       position: relative;
       overflow: hidden;
     }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 50%;
+    }
     .hero::after {
       content: '⚽';
       position: absolute;
-      right: -10px;
-      bottom: -20px;
-      font-size: 100px;
-      opacity: 0.08;
-      transform: rotate(-20deg);
+      right: 16px; bottom: -8px;
+      font-size: 72px;
+      opacity: 0.18;
+      transform: rotate(15deg);
     }
-    .hero-label {
-      font-size: 11px;
-      letter-spacing: 0.1em;
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      opacity: 0.7;
-      margin-bottom: 4px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
     }
-    .hero h1 { font-size: 22px; font-weight: 700; }
-    .hero p { font-size: 13px; opacity: 0.85; margin-top: 4px; }
+    .hero h1 { font-size: 24px; font-weight: 800; line-height: 1.2; }
+    .hero p { font-size: 13px; opacity: 0.85; margin-top: 6px; }
 
     /* CONTENT */
     .content { padding: 1.25rem; }
 
+    /* SECTION */
+    .section-label {
+      font-size: 11px; font-weight: 800;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--green-dark);
+      margin: 1.5rem 0 0.6rem;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .section-label::before {
+      content: '';
+      display: inline-block;
+      width: 3px; height: 14px;
+      background: var(--green);
+      border-radius: 2px;
+    }
+
     /* FORM */
-    .field { margin-bottom: 1.1rem; }
+    .field { margin-bottom: 1rem; }
     .field label {
-      font-size: 12px;
-      font-weight: 600;
+      font-size: 12px; font-weight: 700;
       color: var(--text-sub);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      display: block;
-      margin-bottom: 7px;
+      display: block; margin-bottom: 7px;
     }
     input[type=text], select {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid var(--border);
+      width: 100%; padding: 12px 14px;
+      border: 2px solid var(--border);
       border-radius: var(--radius-sm);
       background: var(--card);
       color: var(--text);
-      font-size: 16px;
-      font-family: inherit;
-      appearance: none;
-      -webkit-appearance: none;
-      outline: none;
-      transition: border-color 0.15s;
+      font-size: 16px; font-family: inherit;
+      appearance: none; -webkit-appearance: none;
+      outline: none; transition: border-color 0.15s, box-shadow 0.15s;
     }
-    input[type=text]:focus, select:focus { border-color: var(--green); }
+    input[type=text]:focus, select:focus {
+      border-color: var(--green);
+      box-shadow: 0 0 0 3px rgba(0,165,80,0.12);
+    }
     .select-wrap { position: relative; }
     .select-wrap::after {
-      content: '▾';
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-sub);
-      pointer-events: none;
+      content: '▾'; position: absolute;
+      right: 14px; top: 50%; transform: translateY(-50%);
+      color: var(--text-sub); pointer-events: none; font-size: 16px;
     }
 
     /* CHIPS */
     .chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .chip {
-      padding: 7px 15px;
-      border-radius: 20px;
-      border: 1.5px solid var(--border);
+      padding: 8px 14px; border-radius: 20px;
+      border: 2px solid var(--border);
       background: var(--card);
       color: var(--text-sub);
-      font-size: 14px;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all 0.15s;
-      user-select: none;
+      font-size: 14px; font-family: inherit;
+      cursor: pointer; transition: all 0.15s;
+      user-select: none; font-weight: 500;
     }
-    .chip.on { background: var(--Light blue); color: white; border-color: var(--Light blue); }
+    .chip.on-green { background: var(--green); color: white; border-color: var(--green); }
+    .chip.on-red { background: var(--red); color: white; border-color: var(--red); }
 
     /* BUTTONS */
     .btn {
-      width: 100%;
-      padding: 14px;
-      border: none;
-      border-radius: var(--radius);
-      font-size: 16px;
-      font-weight: 700;
-      font-family: inherit;
-      cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
+      width: 100%; padding: 15px;
+      border: none; border-radius: var(--radius);
+      font-size: 16px; font-weight: 800;
+      font-family: inherit; cursor: pointer;
+      transition: transform 0.1s, opacity 0.15s;
+      letter-spacing: 0.02em;
     }
-    .btn:active { transform: scale(0.98); }
-    .btn-green { background: var(--green); color: white; }
+    .btn:active { transform: scale(0.97); }
+    .btn-green {
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: white;
+      box-shadow: 0 4px 14px rgba(0,165,80,0.35);
+    }
     .btn-gray {
-      background: var(--card);
-      color: var(--text-sub);
-      border: 1.5px solid var(--border);
-      margin-top: 10px;
+      background: var(--card); color: var(--text-sub);
+      border: 2px solid var(--border); margin-top: 10px;
+      box-shadow: none;
     }
-    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 
-    /* CARD */
+    /* CARDS */
     .card {
       background: var(--card);
       border-radius: var(--radius);
       padding: 1rem 1.25rem;
       margin-bottom: 0.75rem;
-      border: 1px solid var(--border);
-    }
-    .card-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .card-body {
-      font-size: 14px;
-      color: var(--text-sub);
-      line-height: 1.7;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
     }
 
-    /* SECTION LABEL */
-    .section-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-sub);
-      margin: 1.5rem 0 0.6rem;
-    }
-
-    /* XP / LEVEL */
-    .level-bar-wrap {
-      background: #e8f5ee;
+    /* LEVEL BAR */
+    .level-wrap {
+      background: linear-gradient(135deg, #e6f7ef, #d4f0e3);
       border-radius: var(--radius);
-      padding: 0.9rem 1.1rem;
+      padding: 1rem 1.25rem;
       margin-bottom: 1rem;
+      border: 1.5px solid #b8e4cc;
     }
     .level-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
+      display: flex; justify-content: space-between;
+      align-items: center; margin-bottom: 8px;
     }
     .level-badge {
-      background: var(--green);
-      color: white;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 20px;
+      background: var(--green); color: white;
+      font-size: 13px; font-weight: 800;
+      padding: 4px 12px; border-radius: 20px;
     }
-    .xp-text { font-size: 12px; color: var(--green-mid); }
+    .rank-name {
+      font-size: 12px; font-weight: 700; color: var(--green-dark);
+    }
+    .xp-text { font-size: 11px; color: var(--green-dark); }
     .bar-track {
-      background: white;
-      border-radius: 20px;
-      height: 10px;
-      overflow: hidden;
+      background: rgba(255,255,255,0.7); border-radius: 20px;
+      height: 10px; overflow: hidden;
     }
     .bar-fill {
-      background: linear-gradient(90deg, var(--green), var(--green-mid));
-      height: 100%;
-      border-radius: 20px;
-      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background: linear-gradient(90deg, var(--green), #00cc66);
+      height: 100%; border-radius: 20px;
+      transition: width 0.8s cubic-bezier(0.34,1.56,0.64,1);
     }
 
     /* MENU ITEM */
     .menu-item {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 1rem 1.25rem;
-      margin-bottom: 0.75rem;
-      border: 1px solid var(--border);
-      display: flex;
-      gap: 1rem;
-      align-items: flex-start;
+      background: var(--card); border-radius: var(--radius);
+      padding: 1rem 1.25rem; margin-bottom: 0.75rem;
+      border: 1.5px solid var(--border);
+      box-shadow: var(--shadow);
+      display: flex; gap: 1rem; align-items: flex-start;
     }
-    .menu-num {
-      width: 30px;
-      height: 30px;
-      background: var(--green-light);
-      color: var(--green);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 700;
-      flex-shrink: 0;
+    .menu-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; flex-shrink: 0;
     }
+    .menu-icon.skill { background: #e6f7ef; }
+    .menu-icon.cognition { background: #e8f0ff; }
+    .menu-icon.weakness { background: #fff0f0; }
     .menu-body { flex: 1; }
-    .menu-title {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .menu-top {
+      display: flex; justify-content: space-between;
+      align-items: flex-start; margin-bottom: 5px;
     }
-    .menu-min {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--green);
-      background: var(--green-light);
-      padding: 2px 9px;
-      border-radius: 12px;
+    .menu-title { font-size: 15px; font-weight: 800; line-height: 1.3; }
+    .menu-tag {
+      font-size: 10px; font-weight: 700; padding: 2px 8px;
+      border-radius: 10px; white-space: nowrap; flex-shrink: 0; margin-left: 8px;
     }
-    .menu-detail { font-size: 13px; color: var(--text-sub); line-height: 1.65; }
+    .menu-tag.skill { background: #e6f7ef; color: var(--green-dark); }
+    .menu-tag.cognition { background: #e8f0ff; color: #0044aa; }
+    .menu-tag.weakness { background: #fff0f0; color: #cc2200; }
+    .menu-min { font-size: 11px; color: var(--text-sub); margin-bottom: 5px; }
+    .menu-detail { font-size: 13px; color: var(--text-sub); line-height: 1.7; }
+
+    /* SPIDER CHART */
+    .chart-wrap {
+      background: var(--card); border-radius: var(--radius);
+      padding: 1rem; border: 1.5px solid var(--border);
+      box-shadow: var(--shadow); margin-bottom: 0.75rem;
+      text-align: center;
+    }
+    .chart-title { font-size: 13px; font-weight: 700; margin-bottom: 0.75rem; color: var(--text); }
 
     /* STARS */
     .stars { display: flex; gap: 8px; margin: 0.75rem 0; }
-    .star {
-      font-size: 28px;
-      opacity: 0.2;
-      cursor: pointer;
-      transition: opacity 0.15s, transform 0.1s;
-    }
+    .star { font-size: 30px; opacity: 0.2; cursor: pointer; transition: opacity 0.15s, transform 0.1s; }
     .star.on { opacity: 1; }
     .star:active { transform: scale(1.3); }
 
     /* LOADING */
-    .loading {
-      text-align: center;
-      padding: 4rem 1rem;
-    }
-    .ball-anim {
-      font-size: 48px;
-      animation: bounce 0.7s infinite alternate;
+    .loading { text-align: center; padding: 5rem 1rem; }
+    .ball-bounce {
+      font-size: 52px; animation: bounce 0.65s infinite alternate;
       display: inline-block;
     }
     @keyframes bounce {
-      from { transform: translateY(0); }
-      to { transform: translateY(-16px); }
+      from { transform: translateY(0) rotate(0deg); }
+      to { transform: translateY(-20px) rotate(20deg); }
     }
-    .loading p {
-      font-size: 15px;
-      color: var(--text-sub);
-      margin-top: 1.25rem;
-    }
+    .loading-txt { font-size: 16px; font-weight: 700; color: var(--green-dark); margin-top: 1.25rem; }
+    .loading-sub { font-size: 13px; color: var(--text-sub); margin-top: 6px; }
 
     /* DONE */
-    .done-center {
-      text-align: center;
-      padding: 2.5rem 1.25rem;
-    }
-    .xp-big {
-      font-size: 48px;
-      font-weight: 800;
-      color: var(--green);
-      margin: 0.5rem 0 0.25rem;
-    }
+    .done-wrap { text-align: center; padding: 2.5rem 1.25rem; }
+    .done-emoji { font-size: 72px; animation: pop 0.4s ease; }
+    @keyframes pop { from { transform: scale(0); } to { transform: scale(1); } }
+    .xp-big { font-size: 52px; font-weight: 900; color: var(--green); margin: 0.5rem 0 0.25rem; }
 
     /* ERROR */
-    .error-box {
-      background: #fff0f0;
-      border: 1px solid #f09595;
-      border-radius: var(--radius-sm);
-      padding: 0.9rem;
-      font-size: 13px;
-      color: #a32d2d;
-      margin-top: 1rem;
-      line-height: 1.5;
+    .err {
+      background: #fff0f0; border: 2px solid #f09595;
+      border-radius: var(--radius-sm); padding: 0.9rem;
+      font-size: 13px; color: #a32d2d; margin-top: 1rem; line-height: 1.5;
     }
+
+    /* TOTAL STATS */
+    .stats-row {
+      display: flex; gap: 8px; margin-bottom: 0.75rem;
+    }
+    .stat-box {
+      flex: 1; background: var(--card); border-radius: var(--radius-sm);
+      padding: 0.7rem 0.5rem; text-align: center;
+      border: 1.5px solid var(--border);
+    }
+    .stat-val { font-size: 20px; font-weight: 800; color: var(--green); }
+    .stat-label { font-size: 10px; color: var(--text-sub); margin-top: 2px; }
   </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- 画面1: セットアップ（親向け） -->
+  <!-- 画面1: セットアップ -->
   <div class="screen active" id="s-setup">
     <div class="hero">
-      <div class="hero-label">⚽ Soccer Coach AI</div>
+      <div class="hero-tag">⚽ Soccer Coach AI</div>
       <h1>サッカーコーチAI</h1>
-      <p>子どもの情報を入れると練習プランを作ってくれます</p>
+      <p>子どもの情報を入れると<br>AIが練習プランを作ります！</p>
     </div>
     <div class="content">
       <div class="field">
-        <label>子どもの名前</label>
+        <label>👦 子どもの名前</label>
         <input type="text" id="name" placeholder="例：たくみ">
       </div>
       <div class="field">
-        <label>年齢</label>
+        <label>🎂 年齢</label>
         <div class="select-wrap">
           <select id="age">
             <option value="">選んでください</option>
@@ -332,7 +307,7 @@
         </div>
       </div>
       <div class="field">
-        <label>サッカー歴</label>
+        <label>📅 サッカー歴</label>
         <div class="select-wrap">
           <select id="experience">
             <option value="">選んでください</option>
@@ -343,23 +318,34 @@
         </div>
       </div>
       <div class="field">
-        <label>得意なこと（複数OK）</label>
+        <label>✅ 得意なこと（複数OK）</label>
         <div class="chips" id="strengths">
           <div class="chip" data-v="ドリブル">ドリブル</div>
           <div class="chip" data-v="パス">パス</div>
           <div class="chip" data-v="シュート">シュート</div>
           <div class="chip" data-v="トラップ">トラップ</div>
           <div class="chip" data-v="守備">守備</div>
-          <div class="chip" data-v="動き出し">動き出し</div>
           <div class="chip" data-v="まだわからない">まだわからない</div>
         </div>
       </div>
-      <div class="field" style="margin-top:1rem">
-        <label>あこがれ・やりたいプレー（任意）</label>
+      <div class="field" style="margin-top:0.5rem">
+        <label>❌ 苦手なこと（複数OK）</label>
+        <div class="chips" id="weaknesses">
+          <div class="chip" data-v="ドリブル">ドリブル</div>
+          <div class="chip" data-v="パス">パス</div>
+          <div class="chip" data-v="シュート">シュート</div>
+          <div class="chip" data-v="トラップ">トラップ</div>
+          <div class="chip" data-v="守備">守備</div>
+          <div class="chip" data-v="判断の速さ">判断の速さ</div>
+          <div class="chip" data-v="特になし">特になし</div>
+        </div>
+      </div>
+      <div class="field" style="margin-top:0.5rem">
+        <label>⭐ あこがれ・やりたいプレー（任意）</label>
         <input type="text" id="dream" placeholder="例：久保建英みたいにドリブルしたい">
       </div>
       <div class="field">
-        <label>1回の練習時間</label>
+        <label>⏱ 1回の練習時間</label>
         <div class="select-wrap">
           <select id="duration">
             <option value="">選んでください</option>
@@ -370,7 +356,7 @@
           </select>
         </div>
       </div>
-      <button class="btn btn-green" onclick="generate()">練習プランを作る →</button>
+      <button class="btn btn-green" onclick="generate()">練習プランを作る ⚡</button>
       <div id="err"></div>
     </div>
   </div>
@@ -378,28 +364,56 @@
   <!-- 画面2: ローディング -->
   <div class="screen" id="s-loading">
     <div class="loading">
-      <div class="ball-anim">⚽</div>
-      <p>コーチAIが<br>プランを考えています…</p>
+      <div class="ball-bounce">⚽</div>
+      <div class="loading-txt">コーチAIが考えています…</div>
+      <div class="loading-sub">最新メソッドでプランを作成中</div>
     </div>
   </div>
 
   <!-- 画面3: 子ども画面 -->
   <div class="screen" id="s-play">
     <div class="hero">
-      <div class="hero-label">🏆 今日のトレーニング</div>
-      <h1 id="play-title">トレーニングスタート！</h1>
+      <div class="hero-tag">🏆 今日のれんしゅう</div>
+      <h1 id="play-title">れんしゅうスタート！</h1>
       <p id="play-sub">がんばろう！</p>
     </div>
     <div class="content">
-      <!-- XP -->
-      <div class="level-bar-wrap">
+
+      <!-- ランク＆XP -->
+      <div class="level-wrap">
         <div class="level-row">
           <span class="level-badge">Lv.<span id="lv">1</span></span>
-          <span class="xp-text"><span id="xp-now">0</span> / 100 XP</span>
+          <span class="rank-name" id="rank-name">⚽ 草サッカー</span>
         </div>
         <div class="bar-track">
           <div class="bar-fill" id="xp-bar" style="width:0%"></div>
         </div>
+        <div style="display:flex;justify-content:space-between;margin-top:5px">
+          <span class="xp-text">総XP: <strong id="xp-total">0</strong></span>
+          <span class="xp-text">総練習時間: <strong id="total-time">0</strong>分</span>
+        </div>
+      </div>
+
+      <!-- 統計 -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-val" id="stat-sessions">0</div>
+          <div class="stat-label">練習回数</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-hours">0</div>
+          <div class="stat-label">総時間(分)</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-val" id="stat-streak">0</div>
+          <div class="stat-label">連続日数</div>
+        </div>
+      </div>
+
+      <!-- スパイダーチャート -->
+      <div class="chart-wrap">
+        <div class="chart-title">📊 選手ステータス</div>
+        <svg id="spider" viewBox="0 0 220 220" width="100%" style="max-width:220px"></svg>
       </div>
 
       <div class="section-label">今日のメニュー</div>
@@ -407,12 +421,12 @@
 
       <div class="section-label">コーチのひとこと</div>
       <div class="card">
-        <div class="card-body" id="advice" style="font-size:15px;color:var(--text)"></div>
+        <div id="advice" style="font-size:15px;line-height:1.75;color:var(--text)"></div>
       </div>
 
-      <div class="section-label">トレーニングはおわった？</div>
+      <div class="section-label">れんしゅうおわった？</div>
       <div class="card">
-        <div class="card-body">今日はどうだった？ ⭐でおしえて</div>
+        <div style="font-size:14px;color:var(--text-sub);margin-bottom:4px">今日はどうだった？ ⭐でおしえて！</div>
         <div class="stars" id="stars">
           <span class="star" data-i="1">⭐</span>
           <span class="star" data-i="2">⭐</span>
@@ -425,54 +439,202 @@
         </button>
       </div>
 
-      <button class="btn btn-gray" onclick="reset()">← 最初からやり直す</button>
+      <button class="btn btn-gray" onclick="goSetup()">← 最初からやり直す</button>
     </div>
   </div>
 
   <!-- 画面4: 完了 -->
   <div class="screen" id="s-done">
-    <div class="content done-center">
-      <div style="font-size:64px">🎉</div>
-      <h2 style="font-size:22px;font-weight:800;margin-top:1rem">トレーニングかんりょう！</h2>
-      <p style="color:var(--text-sub);margin-top:6px">すごいぞ！けいぞくは力なり！</p>
+    <div class="content done-wrap">
+      <div class="done-emoji">🎉</div>
+      <h2 style="font-size:22px;font-weight:800;margin-top:1rem">れんしゅうかんりょう！</h2>
+      <p style="color:var(--text-sub);margin-top:6px;font-size:14px">すごい！つづけることが一番大事！</p>
       <div class="xp-big" id="xp-earned">+30 XP</div>
-      <p style="font-size:14px;color:var(--green);margin-bottom:2rem" id="lv-msg"></p>
-      <button class="btn btn-green" onclick="reset()">もう一度やる →</button>
+      <p style="font-size:14px;color:var(--green-dark);font-weight:700;margin-bottom:1.5rem" id="lv-msg"></p>
+      <div class="card" id="gain-card" style="text-align:left;margin-bottom:1.5rem"></div>
+      <button class="btn btn-green" onclick="goSetup()">つぎのれんしゅうへ ⚡</button>
     </div>
   </div>
 
 </div>
 
 <script>
-  let G = { xp: 0, lv: 1, rating: 0, plan: null, name: '' };
+  // ランク定義
+  const RANKS = [
+    { name: '⚽ 草サッカー',        minMin: 0 },
+    { name: '🏘 地域リーグ',        minMin: 300 },
+    { name: '🏟 都道府県リーグ',    minMin: 1000 },
+    { name: '🇯🇵 JFL',             minMin: 2000 },
+    { name: '🥉 J3',               minMin: 3500 },
+    { name: '🥈 J2',               minMin: 5000 },
+    { name: '🥇 J1',               minMin: 6000 },
+    { name: '🇧🇪 シントトロイデン', minMin: 7000 },
+    { name: '🌍 5大リーグ（サブ）', minMin: 8000 },
+    { name: '⭐ 5大リーグ（スタメン）', minMin: 9000 },
+    { name: '🏆 バロンドール',      minMin: 10000 },
+  ];
+
+  const SKILLS = ['shoot','pass','dribble','control','defense','iq'];
+  const SKILL_LABELS = { shoot:'シュート', pass:'パス', dribble:'ドリブル', control:'トラップ', defense:'守備', iq:'サッカーIQ' };
+  const CATEGORY_ICON = { skill:'⚽', cognition:'🧠', weakness:'🔥' };
+  const CATEGORY_LABEL = { skill:'技術', cognition:'頭脳', weakness:'苦手克服' };
+
+  let G = {
+    xp: 0, lv: 1, rating: 0, plan: null, name: '',
+    sessions: 0, totalMinutes: 0, streak: 0,
+    skills: { shoot:10, pass:10, dribble:10, control:10, defense:10, iq:10 }
+  };
 
   try {
-    const s = sessionStorage.getItem('soccerApp');
+    const s = sessionStorage.getItem('soccerV3');
     if (s) G = { ...G, ...JSON.parse(s) };
+    if (!G.skills) G.skills = { shoot:10, pass:10, dribble:10, control:10, defense:10, iq:10 };
   } catch(e) {}
 
   function save() {
-    try { sessionStorage.setItem('soccerApp', JSON.stringify(G)); } catch(e) {}
+    try { sessionStorage.setItem('soccerV3', JSON.stringify(G)); } catch(e) {}
   }
 
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
     document.getElementById(id).classList.add('active');
-    window.scrollTo(0, 0);
+    window.scrollTo(0,0);
   }
 
-  document.querySelectorAll('.chip').forEach(c => {
-    c.addEventListener('click', () => c.classList.toggle('on'));
+  // チップ
+  document.querySelectorAll('#strengths .chip').forEach(c => {
+    c.addEventListener('click', () => c.classList.toggle('on-green'));
+  });
+  document.querySelectorAll('#weaknesses .chip').forEach(c => {
+    c.addEventListener('click', () => c.classList.toggle('on-red'));
   });
 
+  // 星
   document.querySelectorAll('.star').forEach(s => {
     s.addEventListener('click', () => {
       const i = parseInt(s.dataset.i);
       G.rating = i;
-      document.querySelectorAll('.star').forEach((el, idx) => el.classList.toggle('on', idx < i));
+      document.querySelectorAll('.star').forEach((el,idx) => el.classList.toggle('on', idx < i));
       document.getElementById('btn-done').style.display = 'block';
     });
   });
+
+  // ランク取得
+  function getRank(totalMin) {
+    let r = RANKS[0];
+    for (const rank of RANKS) {
+      if (totalMin >= rank.minMin) r = rank;
+    }
+    return r;
+  }
+
+  // スパイダーチャート
+  function drawSpider(skills) {
+    const svg = document.getElementById('spider');
+    svg.innerHTML = '';
+    const cx = 110, cy = 110, R = 85;
+    const n = SKILLS.length;
+    const angles = SKILLS.map((_,i) => (i / n) * Math.PI * 2 - Math.PI / 2);
+
+    // グリッド
+    [0.25,0.5,0.75,1].forEach(ratio => {
+      const pts = angles.map(a =>
+        `${cx + R*ratio*Math.cos(a)},${cy + R*ratio*Math.sin(a)}`
+      ).join(' ');
+      const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+      poly.setAttribute('points', pts);
+      poly.setAttribute('fill', 'none');
+      poly.setAttribute('stroke', '#d4e8da');
+      poly.setAttribute('stroke-width', '1');
+      svg.appendChild(poly);
+    });
+
+    // 軸線＆ラベル
+    angles.forEach((a, i) => {
+      const x2 = cx + R*Math.cos(a), y2 = cy + R*Math.sin(a);
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',cx); line.setAttribute('y1',cy);
+      line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+      line.setAttribute('stroke','#d4e8da'); line.setAttribute('stroke-width','1');
+      svg.appendChild(line);
+
+      const lx = cx + (R+18)*Math.cos(a), ly = cy + (R+18)*Math.sin(a);
+      const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+      text.setAttribute('x', lx); text.setAttribute('y', ly);
+      text.setAttribute('text-anchor','middle');
+      text.setAttribute('dominant-baseline','middle');
+      text.setAttribute('font-size','10');
+      text.setAttribute('fill','#5a6a7a');
+      text.setAttribute('font-weight','700');
+      text.textContent = SKILL_LABELS[SKILLS[i]];
+      svg.appendChild(text);
+    });
+
+    // データ
+    const maxVal = 100;
+    const pts = SKILLS.map((sk, i) => {
+      const val = Math.min(skills[sk] || 10, maxVal);
+      const ratio = val / maxVal;
+      return `${cx + R*ratio*Math.cos(angles[i])},${cy + R*ratio*Math.sin(angles[i])}`;
+    }).join(' ');
+    const poly = document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    poly.setAttribute('points', pts);
+    poly.setAttribute('fill', 'rgba(0,165,80,0.2)');
+    poly.setAttribute('stroke', '#00a550');
+    poly.setAttribute('stroke-width', '2.5');
+    svg.appendChild(poly);
+
+    // 点
+    SKILLS.forEach((sk, i) => {
+      const val = Math.min(skills[sk] || 10, maxVal);
+      const ratio = val / maxVal;
+      const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      circle.setAttribute('cx', cx + R*ratio*Math.cos(angles[i]));
+      circle.setAttribute('cy', cy + R*ratio*Math.sin(angles[i]));
+      circle.setAttribute('r', '4');
+      circle.setAttribute('fill', '#00a550');
+      svg.appendChild(circle);
+    });
+  }
+
+  function updatePlayScreen() {
+    document.getElementById('play-title').textContent = G.name + 'のれんしゅう！';
+    document.getElementById('lv').textContent = G.lv;
+    document.getElementById('xp-total').textContent = G.xp;
+    document.getElementById('total-time').textContent = G.totalMinutes;
+    document.getElementById('stat-sessions').textContent = G.sessions;
+    document.getElementById('stat-hours').textContent = G.totalMinutes;
+    document.getElementById('stat-streak').textContent = G.streak;
+
+    const rank = getRank(G.totalMinutes);
+    document.getElementById('rank-name').textContent = rank.name;
+
+    const xpPct = Math.min((G.xp % 100), 100);
+    document.getElementById('xp-bar').style.width = xpPct + '%';
+
+    drawSpider(G.skills);
+
+    const list = document.getElementById('menu-list');
+    list.innerHTML = '';
+    (G.plan?.menu || []).forEach((item, i) => {
+      const cat = item.category || 'skill';
+      const el = document.createElement('div');
+      el.className = 'menu-item';
+      el.innerHTML = `
+        <div class="menu-icon ${cat}">${CATEGORY_ICON[cat] || '⚽'}</div>
+        <div class="menu-body">
+          <div class="menu-top">
+            <div class="menu-title">${item.title}</div>
+            <span class="menu-tag ${cat}">${CATEGORY_LABEL[cat] || '技術'}</span>
+          </div>
+          <div class="menu-min">⏱ ${item.minutes}分</div>
+          <div class="menu-detail">${item.detail}</div>
+        </div>`;
+      list.appendChild(el);
+    });
+
+    document.getElementById('advice').textContent = G.plan?.advice || '';
+  }
 
   async function generate() {
     const name = document.getElementById('name').value.trim();
@@ -480,10 +642,11 @@
     const experience = document.getElementById('experience').value;
     const duration = document.getElementById('duration').value;
     const dream = document.getElementById('dream').value.trim();
-    const strengths = [...document.querySelectorAll('#strengths .chip.on')].map(c => c.dataset.v);
+    const strengths = [...document.querySelectorAll('#strengths .chip.on-green')].map(c => c.dataset.v);
+    const weaknesses = [...document.querySelectorAll('#weaknesses .chip.on-red')].map(c => c.dataset.v);
 
     if (!name || !age || !experience || !duration) {
-      document.getElementById('err').innerHTML = '<div class="error-box">名前・年齢・サッカー歴・練習時間を入力してください</div>';
+      document.getElementById('err').innerHTML = '<div class="err">名前・年齢・サッカー歴・練習時間を入力してください</div>';
       return;
     }
     document.getElementById('err').innerHTML = '';
@@ -494,68 +657,62 @@
       const res = await fetch('/api/plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, age, experience, strengths, dream, duration })
+        body: JSON.stringify({ name, age, experience, strengths, weaknesses, dream, duration })
       });
       const rawText = await res.text();
-      if (!res.ok) {
-        throw new Error('APIエラー: ' + rawText);
-      }
-      try {
-        G.plan = JSON.parse(rawText);
-      } catch(e) {
-        throw new Error('パース失敗。レスポンス: ' + rawText);
-      }
+      if (!res.ok) throw new Error(rawText);
+      G.plan = JSON.parse(rawText);
+      G.rating = 0;
+      document.querySelectorAll('.star').forEach(s => s.classList.remove('on'));
+      document.getElementById('btn-done').style.display = 'none';
       save();
-      renderPlay();
+      updatePlayScreen();
       show('s-play');
     } catch(e) {
-      document.getElementById('err').innerHTML = `<div class="error-box">エラー: ${e.message}</div>`;
+      document.getElementById('err').innerHTML = `<div class="err">エラー: ${e.message.slice(0,200)}</div>`;
       show('s-setup');
     }
-  }
-
-  function renderPlay() {
-    document.getElementById('play-title').textContent = `${G.name}のれんしゅう！`;
-    document.getElementById('play-sub').textContent = 'よし、がんばろう！';
-    document.getElementById('advice').textContent = G.plan?.advice || '';
-    document.getElementById('lv').textContent = G.lv;
-    const cur = G.xp % 100;
-    document.getElementById('xp-now').textContent = cur;
-    document.getElementById('xp-bar').style.width = cur + '%';
-
-    const list = document.getElementById('menu-list');
-    list.innerHTML = '';
-    (G.plan?.menu || []).forEach((item, i) => {
-      const el = document.createElement('div');
-      el.className = 'menu-item';
-      el.innerHTML = `
-        <div class="menu-num">${i + 1}</div>
-        <div class="menu-body">
-          <div class="menu-title">
-            <span>${item.title}</span>
-            <span class="menu-min">${item.minutes}分</span>
-          </div>
-          <div class="menu-detail">${item.detail}</div>
-        </div>`;
-      list.appendChild(el);
-    });
   }
 
   function complete() {
     const earned = G.rating * 6;
     G.xp += earned;
-    const newLv = Math.floor(G.xp / 100) + 1;
-    const up = newLv > G.lv;
-    G.lv = newLv;
+    G.lv = Math.floor(G.xp / 100) + 1;
+    G.sessions++;
+    const dur = parseInt(document.getElementById('duration')?.value) || 30;
+    G.totalMinutes += dur;
+    G.streak++;
+
+    // スキル更新
+    const gains = G.plan?.skill_gains || {};
+    const gainLines = [];
+    for (const [sk, val] of Object.entries(gains)) {
+      if (val > 0 && G.skills[sk] !== undefined) {
+        G.skills[sk] = Math.min(100, (G.skills[sk] || 10) + val);
+        gainLines.push(`${SKILL_LABELS[sk]} +${val}`);
+      }
+    }
+
     save();
+
     document.getElementById('xp-earned').textContent = `+${earned} XP`;
-    document.getElementById('lv-msg').textContent = up
-      ? `🎊 レベルアップ！ レベル${G.lv}になったよ！`
-      : `つぎのレベルまであと ${100 - (G.xp % 100)} XP`;
+    const nextRank = RANKS.find(r => r.minMin > G.totalMinutes);
+    document.getElementById('lv-msg').textContent = nextRank
+      ? `次のランク「${nextRank.name}」まであと${nextRank.minMin - G.totalMinutes}分！`
+      : '🏆 最強プレーヤー！';
+
+    const gainCard = document.getElementById('gain-card');
+    if (gainLines.length > 0) {
+      gainCard.innerHTML = `<div style="font-size:13px;font-weight:700;color:var(--green-dark);margin-bottom:8px">📈 スキルアップ！</div>` +
+        gainLines.map(l => `<div style="font-size:14px;color:var(--green);font-weight:700">✅ ${l}</div>`).join('');
+    } else {
+      gainCard.innerHTML = '<div style="font-size:13px;color:var(--text-sub)">次回も頑張ろう！</div>';
+    }
+
     show('s-done');
   }
 
-  function reset() {
+  function goSetup() {
     G.plan = null; G.rating = 0;
     document.querySelectorAll('.star').forEach(s => s.classList.remove('on'));
     document.getElementById('btn-done').style.display = 'none';
@@ -563,7 +720,7 @@
     show('s-setup');
   }
 
-  if (G.plan) { renderPlay(); show('s-play'); }
+  if (G.plan) { updatePlayScreen(); show('s-play'); }
 </script>
 </body>
 </html>
