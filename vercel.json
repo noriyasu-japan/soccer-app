@@ -1,10 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "plan.js": {
-      "runtime": "node@18"
-    }
-  },
   "routes": [
     { "src": "/api/plan", "dest": "/plan.js" },
     { "src": "/(.*)", "dest": "/index.html" }
