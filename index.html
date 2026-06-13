@@ -119,7 +119,7 @@
       transition: all 0.15s;
       user-select: none;
     }
-    .chip.on { background: var(--green); color: white; border-color: var(--green); }
+    .chip.on { background: var(--Light blue); color: white; border-color: var(--Light blue); }
 
     /* BUTTONS */
     .btn {
@@ -314,7 +314,7 @@
     <div class="hero">
       <div class="hero-label">⚽ Soccer Coach AI</div>
       <h1>サッカーコーチAI</h1>
-      <p>子どもの情報を入れると練習プランを作ります</p>
+      <p>子どもの情報を入れると練習プランを作ってくれます</p>
     </div>
     <div class="content">
       <div class="field">
@@ -350,6 +350,7 @@
           <div class="chip" data-v="シュート">シュート</div>
           <div class="chip" data-v="トラップ">トラップ</div>
           <div class="chip" data-v="守備">守備</div>
+          <div class="chip" data-v="動き出し">動き出し</div>
           <div class="chip" data-v="まだわからない">まだわからない</div>
         </div>
       </div>
@@ -385,8 +386,8 @@
   <!-- 画面3: 子ども画面 -->
   <div class="screen" id="s-play">
     <div class="hero">
-      <div class="hero-label">🏆 今日のれんしゅう</div>
-      <h1 id="play-title">れんしゅうスタート！</h1>
+      <div class="hero-label">🏆 今日のトレーニング</div>
+      <h1 id="play-title">トレーニングスタート！</h1>
       <p id="play-sub">がんばろう！</p>
     </div>
     <div class="content">
@@ -409,7 +410,7 @@
         <div class="card-body" id="advice" style="font-size:15px;color:var(--text)"></div>
       </div>
 
-      <div class="section-label">れんしゅうおわった？</div>
+      <div class="section-label">トレーニングはおわった？</div>
       <div class="card">
         <div class="card-body">今日はどうだった？ ⭐でおしえて</div>
         <div class="stars" id="stars">
@@ -432,8 +433,8 @@
   <div class="screen" id="s-done">
     <div class="content done-center">
       <div style="font-size:64px">🎉</div>
-      <h2 style="font-size:22px;font-weight:800;margin-top:1rem">れんしゅうかんりょう！</h2>
-      <p style="color:var(--text-sub);margin-top:6px">すごい！けいぞくは力なり！</p>
+      <h2 style="font-size:22px;font-weight:800;margin-top:1rem">トレーニングかんりょう！</h2>
+      <p style="color:var(--text-sub);margin-top:6px">すごいぞ！けいぞくは力なり！</p>
       <div class="xp-big" id="xp-earned">+30 XP</div>
       <p style="font-size:14px;color:var(--green);margin-bottom:2rem" id="lv-msg"></p>
       <button class="btn btn-green" onclick="reset()">もう一度やる →</button>
@@ -495,11 +496,15 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, age, experience, strengths, dream, duration })
       });
+      const rawText = await res.text();
       if (!res.ok) {
-        const e = await res.json();
-        throw new Error(e.error || res.status);
+        throw new Error('APIエラー: ' + rawText);
       }
-      G.plan = await res.json();
+      try {
+        G.plan = JSON.parse(rawText);
+      } catch(e) {
+        throw new Error('パース失敗。レスポンス: ' + rawText);
+      }
       save();
       renderPlay();
       show('s-play');
