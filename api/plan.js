@@ -12,17 +12,29 @@ module.exports = async function handler(req, res) {
   }[experience] || experience;
 
   const pcNum = parseInt(playerCount) || 1;
-  const pcDesc = pcNum === 1 ? '1人（自主練）' : pcNum >= 5 ? `${pcNum}人以上（チーム練習可）` : `${pcNum}人`;
+  let pcConstraint = '';
+  if (pcNum === 1) {
+    pcConstraint = `【重要】練習人数は1人。必ず1人で完結できるメニューのみ。対人・パス交換・ゲーム形式は絶対に含めない。壁打ち・コーン・ボール1個で完結するメニュー限定。`;
+  } else if (pcNum === 2) {
+    pcConstraint = `【重要】練習人数は2人。2人1組で完結するメニューのみ。3人以上が必要なメニューは絶対に含めない。1対1・パス交換・2人ゲームが中心。`;
+  } else if (pcNum === 3) {
+    pcConstraint = `【重要】練習人数は3人。3人以内で完結するメニューのみ。4人以上が必要なメニーは絶対に含めない。3角形パス・2対1・3人ロンドが有効。`;
+  } else if (pcNum === 4) {
+    pcConstraint = `【重要】練習人数は4人。4人以内で完結するメニューのみ。2対2・4角形ロンド・4人ゲーム形式が有効。`;
+  } else {
+    pcConstraint = `【重要】練習人数は${pcNum}人以上。ロンド・ミニゲーム・ポゼッション練習など複数人を活かした形式を積極的に取り入れる。`;
+  }
 
   const prompt = `あなたは小学生専門のサッカーコーチです。最新の育成メソッドを熟知しています。
 
+${pcConstraint}
+
 【参照するトレーニングメソッド】
 - 認知→判断→実行の回路トレーニング（池上正メソッド）
-- コグニティブトレーニング（欧州名門クラブ導入済み。見る→脳で判断→動くの連携強化）
+- コグニティブトレーニング（欧州名門クラブ導入済み）
 - エコロジカルアプローチ（実戦に近い状況での学習）
-- ロンド（スペイン式パス回しで判断力・技術を同時習得）
-- ヴィセラルトレーニング（無意識レベルの認知向上）
-- サッカーIQ向上トレーニング（視野拡大・空間認知・ポジショニング理解）
+- ロンド（スペイン式。${pcNum >= 4 ? '今回の人数で実施可能' : '今回の人数には不向きなので使わない'}）
+- サッカーIQ向上（視野拡大・空間認知・ポジショニング）
 
 【子どもの情報】
 - 名前: ${name}
@@ -32,17 +44,15 @@ module.exports = async function handler(req, res) {
 - 苦手: ${weaknesses?.length ? weaknesses.join('、') : '特になし'}
 - 目指すプレー・あこがれ: ${dream || 'なし'}
 - 練習時間: ${duration}分
-- 練習人数: ${pcDesc}
+- 練習人数: ${pcNum}人
 
-【設計ルール】
-- menuは4〜5個。合計時間がduration以内に収まること
-- 練習人数が1人の場合は1人でできるメニューのみ。2人以上の場合は対人・ゲーム形式を積極的に入れる
-- 5人以上の場合はロンドやゲーム形式（ミニゲームなど）を必ず含める
-- 苦手なことがあれば改善メニューを1つ必ず入れる（category: "weakness"）
-- サッカーIQ・認知系メニューを1つ必ず入れる（category: "cognition"）
-- あこがれ・目標に沿ったメニューを優先的に組み込む
-- detailは「どこに立つか」「何回やるか」「どう動くか」まで超具体的に（高学年対象なので専門用語OK）
-- skill_gainsは今回のメニューで伸びるスキルを0〜3の整数で
+【メニュー設計ルール】
+- menuは4〜5個。合計時間がduration以内
+- 全メニューが${pcNum}人で実施可能なものであること（これは絶対条件）
+- 苦手克服メニューを1つ（category: "weakness"）
+- 認知・判断系メニューを1つ（category: "cognition"）
+- detailは箇条書きで「準備」「手順」「ポイント」に分けて具体的に記述
+- diagramTypeは以下から選ぶ: "pass"（パス系）"dribble"（ドリブル系）"rondo"（ロンド・囲み系）"shooting"（シュート系）"positioning"（ポジショニング系）"none"（図解不要）
 
 JSONのみ出力（前置き・コードブロック不要）:
 {
@@ -51,10 +61,11 @@ JSONのみ出力（前置き・コードブロック不要）:
       "title": "メニュー名",
       "minutes": 数字,
       "category": "skill|cognition|weakness",
-      "detail": "超具体的な説明"
+      "diagramType": "pass|dribble|rondo|shooting|positioning|none",
+      "detail": "・準備：〜\\n・手順：〜\\n・ポイント：〜"
     }
   ],
-  "advice": "コーチからのアドバイス。100文字以内。小学校高学年向けなので丁寧語は不要",
+  "advice": "コーチからのアドバイス。100文字以内。小学校高学年向け・敬語不要",
   "skill_gains": {
     "shoot": 0〜3,
     "pass": 0〜3,
@@ -75,7 +86,7 @@ JSONのみ出力（前置き・コードブロック不要）:
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 1500,
+        max_tokens: 2000,
         messages: [{ role: 'user', content: prompt }]
       })
     });
