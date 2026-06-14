@@ -497,11 +497,11 @@
     skills:{ shoot:10, pass:10, dribble:10, control:10, defense:10, iq:10 }
   };
   try {
-    const s = sessionStorage.getItem('soccerV4');
+    const s = localStorage.getItem('soccerV4');
     if (s) G = { ...G, ...JSON.parse(s) };
     if (!G.skills) G.skills = { shoot:10, pass:10, dribble:10, control:10, defense:10, iq:10 };
   } catch(e) {}
-  function save() { try { sessionStorage.setItem('soccerV4', JSON.stringify(G)); } catch(e) {} }
+  function save() { try { localStorage.setItem('soccerV4', JSON.stringify(G)); } catch(e) {} }
 
   function show(id) {
     document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
