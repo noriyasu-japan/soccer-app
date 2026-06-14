@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
   <title>SOCCER COACH AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+1:wght@400;500;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -16,7 +19,7 @@
     }
     html { background: var(--black); }
     body {
-      font-family: -apple-system, 'Hiragino Sans', sans-serif;
+      font-family: 'M PLUS 1', -apple-system, 'Hiragino Sans', sans-serif;
       background: var(--black); color: var(--white);
       min-height: 100vh; -webkit-font-smoothing: antialiased;
     }
@@ -269,6 +272,119 @@
     /* ── ERR ── */
     .err { background: rgba(255,59,107,0.1); border: 1.5px solid rgba(255,59,107,0.3); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 13px; color: var(--accent2); margin-top: 12px; line-height: 1.5; }
 
+    /* ── PLAYER CARD ── */
+    .player-card {
+      position: relative; border-radius: var(--radius);
+      overflow: hidden; padding: 20px 16px 14px;
+      background: linear-gradient(160deg, #c9a84c 0%, #f0d060 30%, #b8922a 60%, #e8c040 80%, #a07820 100%);
+      border: 1.5px solid rgba(240,208,80,0.6);
+      box-shadow: 0 0 40px rgba(200,160,40,0.25), inset 0 1px 0 rgba(255,240,140,0.4);
+    }
+    .player-card-bg {
+      position: absolute; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse at 80% 20%, rgba(255,255,200,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 20% 80%, rgba(180,120,0,0.2) 0%, transparent 50%);
+    }
+    /* 上段：写真＋名前 */
+    .pc-top-row { display: flex; gap: 16px; align-items: center; margin-bottom: 16px; position: relative; }
+    .pc-photo-wrap { position: relative; cursor: pointer; flex-shrink: 0; }
+    .pc-photo {
+      width: 120px; height: 120px; border-radius: 50%;
+      border: 3px solid rgba(255,240,140,0.7);
+      background: rgba(0,0,0,0.15);
+      overflow: hidden; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      box-shadow: 0 0 24px rgba(0,0,0,0.25);
+    }
+    .pc-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .pc-photo-edit {
+      position: absolute; bottom: 4px; right: 4px;
+      background: rgba(0,0,0,0.6); border-radius: 50%;
+      width: 24px; height: 24px; font-size: 12px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pc-photo-placeholder span { color: rgba(0,0,0,0.35) !important; }
+    .pc-top-info { flex: 1; }
+    .pc-rank-badge {
+      font-size: 9px; font-weight: 800; color: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.12); border: 1px solid rgba(0,0,0,0.15);
+      padding: 3px 10px; border-radius: 10px; display: inline-block;
+      margin-bottom: 6px; letter-spacing: 0.02em;
+    }
+    .pc-name { font-size: 20px; font-weight: 900; letter-spacing: -0.01em; margin-bottom: 6px; color: rgba(0,0,0,0.85); }
+    .pc-overall {
+      font-size: 52px; font-weight: 900; color: rgba(0,0,0,0.85);
+      line-height: 1; letter-spacing: -0.03em;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    }
+    .pc-overall-label { font-size: 10px; font-weight: 800; color: rgba(0,0,0,0.45); letter-spacing: 0.15em; align-self: flex-end; padding-bottom: 6px; }
+    /* スキル6項目 */
+    .pc-stats {
+      display: grid; grid-template-columns: repeat(6, 1fr);
+      gap: 4px; margin-bottom: 14px;
+      padding: 10px 8px; background: rgba(0,0,0,0.1);
+      border-radius: var(--radius-sm); position: relative;
+    }
+    .pc-stat { text-align: center; }
+    .pc-stat-val { font-size: 18px; font-weight: 900; color: rgba(0,0,0,0.85); display: block; }
+    .pc-stat-label { font-size: 8px; font-weight: 800; color: rgba(0,0,0,0.45); letter-spacing: 0.06em; }
+    /* Sessions / Minutes行 */
+    .pc-session-row {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0; margin-bottom: 14px;
+      background: rgba(0,0,0,0.1); border-radius: var(--radius-sm);
+      padding: 10px 0;
+    }
+    .pc-session-item { flex: 1; text-align: center; }
+    .pc-session-val { font-size: 26px; font-weight: 900; color: rgba(0,0,0,0.85); display: block; }
+    .pc-session-label { font-size: 8px; font-weight: 800; color: rgba(0,0,0,0.45); letter-spacing: 0.1em; }
+    .pc-session-divider { width: 1px; height: 36px; background: rgba(0,0,0,0.15); }
+    /* XPバー */
+    .pc-xp-row {
+      display: flex; align-items: center;
+      padding-top: 12px; border-top: 1px solid rgba(0,0,0,0.12);
+      position: relative;
+    }
+    .pc-xp-label { font-size: 10px; font-weight: 800; color: rgba(0,0,0,0.6); white-space: nowrap; }
+
+    /* ── ROADMAP ── */
+    .roadmap { display: flex; flex-direction: column; gap: 0; margin-bottom: 12px; }
+    .roadmap-item {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 0; position: relative;
+    }
+    .roadmap-item:not(:last-child)::after {
+      content: ''; position: absolute;
+      left: 15px; top: 36px; width: 2px; height: calc(100% - 16px);
+      background: var(--gray2);
+    }
+    .roadmap-item.done::after { background: var(--accent); }
+    .roadmap-dot {
+      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; border: 2px solid var(--gray2);
+      background: var(--black3); position: relative; z-index: 1;
+    }
+    .roadmap-item.done .roadmap-dot { border-color: var(--accent); background: rgba(0,232,122,0.1); }
+    .roadmap-item.current .roadmap-dot {
+      border-color: var(--accent); background: var(--accent);
+      box-shadow: 0 0 16px rgba(0,232,122,0.5);
+    }
+    .roadmap-info { flex: 1; }
+    .roadmap-name { font-size: 13px; font-weight: 700; }
+    .roadmap-item.done .roadmap-name { color: var(--gray); }
+    .roadmap-item.current .roadmap-name { color: var(--accent); }
+    .roadmap-req { font-size: 10px; color: var(--gray); margin-top: 1px; }
+    .roadmap-check { font-size: 14px; }
+
+    /* ── DANGER BUTTON ── */
+    .btn-danger {
+      background: transparent; color: var(--accent2);
+      border: 1.5px solid rgba(255,59,107,0.3);
+      margin-bottom: 20px;
+    }
+
     /* ── NO PLAN ── */
     .no-plan { text-align: center; padding: 3rem 1.5rem; color: var(--gray); }
     .no-plan-emoji { font-size: 48px; margin-bottom: 1rem; }
@@ -423,32 +539,75 @@
   <!-- ページ: ステータス -->
   <div class="page" id="page-status">
     <div class="content" style="padding-top:20px">
-      <div class="sec" style="margin-top:8px">選手ステータス</div>
-      <div class="rank-card">
-        <div class="rank-row">
-          <span class="rank-badge">LV <span id="lv">1</span></span>
-          <span class="rank-name" id="rank-name">⚽ 草サッカー</span>
+
+      <!-- 選手カード -->
+      <div class="player-card">
+        <div class="player-card-bg"></div>
+        <!-- 上段：写真＋名前＋ランク -->
+        <div class="pc-top-row">
+          <div class="pc-photo-wrap" onclick="triggerPhotoUpload()">
+            <div class="pc-photo" id="pc-photo">
+              <div class="pc-photo-placeholder">
+                <span style="font-size:52px">👤</span>
+                <span style="font-size:9px;color:rgba(0,0,0,0.4);margin-top:6px;display:block">タップして写真を追加</span>
+              </div>
+            </div>
+            <div class="pc-photo-edit">✏️</div>
+          </div>
+          <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="handlePhoto(event)">
+          <div class="pc-top-info">
+            <div class="pc-rank-badge" id="pc-rank-badge">⚽ 草サッカー</div>
+            <div class="pc-name" id="pc-name">—</div>
+            <div style="display:flex;align-items:baseline;gap:4px">
+              <div class="pc-overall" id="pc-overall">10</div>
+              <div class="pc-overall-label">OVERALL</div>
+            </div>
+          </div>
         </div>
-        <div class="bar-track"><div class="bar-fill" id="xp-bar" style="width:0%"></div></div>
-        <div class="xp-row">
-          <span>総XP: <strong id="xp-total">0</strong></span>
-          <span>総練習時間: <strong id="total-time">0</strong>分</span>
+        <!-- 中段：スキル6項目 -->
+        <div class="pc-stats">
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-shoot">10</span><span class="pc-stat-label">SHT</span></div>
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-pass">10</span><span class="pc-stat-label">PAS</span></div>
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-dribble">10</span><span class="pc-stat-label">DRI</span></div>
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-control">10</span><span class="pc-stat-label">CTL</span></div>
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-defense">10</span><span class="pc-stat-label">DEF</span></div>
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-iq">10</span><span class="pc-stat-label">IQ</span></div>
+        </div>
+        <!-- 下段：Sessions / Minutes -->
+        <div class="pc-session-row">
+          <div class="pc-session-item">
+            <span class="pc-session-val" id="stat-sessions">0</span>
+            <span class="pc-session-label">SESSIONS</span>
+          </div>
+          <div class="pc-session-divider"></div>
+          <div class="pc-session-item">
+            <span class="pc-session-val" id="total-time">0</span>
+            <span class="pc-session-label">MINUTES</span>
+          </div>
+        </div>
+        <!-- XPバー -->
+        <div class="pc-xp-row">
+          <span class="pc-xp-label">LV <span id="lv">1</span></span>
+          <div class="bar-track" style="flex:1;margin:0 10px;background:rgba(0,0,0,0.15)">
+            <div class="bar-fill" id="xp-bar" style="width:0%;background:rgba(0,0,0,0.4)"></div>
+          </div>
+          <span class="pc-xp-label"><span id="xp-total">0</span> XP</span>
         </div>
       </div>
-      <div class="stats-row">
-        <div class="stat-box">
-          <div class="stat-val" id="stat-sessions">0</div>
-          <div class="stat-label">Sessions</div>
-        </div>
-        <div class="stat-box">
-          <div class="stat-val" id="stat-hours">0</div>
-          <div class="stat-label">Minutes</div>
-        </div>
-      </div>
+
+      <!-- スパイダーチャート -->
       <div class="spider-card">
-        <div class="spider-title">Player Status</div>
+        <div class="spider-title">Player Ability</div>
         <svg id="spider" viewBox="0 0 220 220" width="100%" style="max-width:220px"></svg>
       </div>
+
+      <!-- ランクロードマップ -->
+      <div class="sec">Career Roadmap</div>
+      <div class="roadmap" id="roadmap"></div>
+
+      <!-- リセット -->
+      <div class="sec">データ管理</div>
+      <button class="btn btn-danger" onclick="confirmReset()">ステータス・履歴をリセット</button>
     </div>
   </div>
 
@@ -531,14 +690,83 @@
 
   function getRank(min){let r=RANKS[0];for(const rk of RANKS){if(min>=rk.min)r=rk;}return r;}
 
+  function getOverall(skills){
+    const vals=Object.values(skills);
+    return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length);
+  }
+
+  function triggerPhotoUpload(){ document.getElementById('photo-input').click(); }
+
+  function handlePhoto(e){
+    const file=e.target.files[0]; if(!file) return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      G.photo=ev.target.result; save(); renderPlayerCard();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function renderPlayerCard(){
+    const overall=getOverall(G.skills);
+    const rank=getRank(G.totalMinutes);
+    document.getElementById('pc-name').textContent=G.name||'—';
+    document.getElementById('pc-overall').textContent=overall;
+    document.getElementById('pc-rank-badge').textContent=rank.name;
+    document.getElementById('pcs-shoot').textContent=G.skills.shoot||10;
+    document.getElementById('pcs-pass').textContent=G.skills.pass||10;
+    document.getElementById('pcs-dribble').textContent=G.skills.dribble||10;
+    document.getElementById('pcs-control').textContent=G.skills.control||10;
+    document.getElementById('pcs-defense').textContent=G.skills.defense||10;
+    document.getElementById('pcs-iq').textContent=G.skills.iq||10;
+    // 写真
+    const photoEl=document.getElementById('pc-photo');
+    if(G.photo){
+      photoEl.innerHTML=`<img src="${G.photo}" alt="player">`;
+    } else {
+      photoEl.innerHTML=`<div class="pc-photo-placeholder"><span style="font-size:28px">👤</span><span style="font-size:9px;color:#8a8a8a;margin-top:4px;display:block">タップして<br>写真を追加</span></div>`;
+    }
+  }
+
+  function renderRoadmap(){
+    const el=document.getElementById('roadmap');
+    const currentMin=G.totalMinutes;
+    el.innerHTML='';
+    RANKS.forEach((rank,i)=>{
+      const next=RANKS[i+1];
+      const done=next ? currentMin>=next.min : currentMin>=rank.min;
+      const current=currentMin>=rank.min && (!next||currentMin<next.min);
+      const div=document.createElement('div');
+      div.className='roadmap-item'+(done&&!current?' done':current?' current':'');
+      const req=rank.min===0?'スタート':`${rank.min}分から`;
+      div.innerHTML=`
+        <div class="roadmap-dot">${rank.name.split(' ')[0]}</div>
+        <div class="roadmap-info">
+          <div class="roadmap-name">${rank.name}</div>
+          <div class="roadmap-req">${req}</div>
+        </div>
+        <div class="roadmap-check">${current?'▶':done?'✅':''}</div>`;
+      el.appendChild(div);
+    });
+  }
+
   function updateStatus(){
     document.getElementById('lv').textContent=G.lv;
     document.getElementById('xp-total').textContent=G.xp;
     document.getElementById('total-time').textContent=G.totalMinutes;
     document.getElementById('stat-sessions').textContent=G.sessions;
-    document.getElementById('stat-hours').textContent=G.totalMinutes;
-    document.getElementById('rank-name').textContent=getRank(G.totalMinutes).name;
     document.getElementById('xp-bar').style.width=(G.xp%100)+'%';
+    renderPlayerCard();
+    renderRoadmap();
+  }
+
+  function confirmReset(){
+    if(confirm('ステータスと履歴をすべてリセットします。この操作は取り消せません。よろしいですか？')){
+      G.xp=0; G.lv=1; G.sessions=0; G.totalMinutes=0;
+      G.skills={shoot:10,pass:10,dribble:10,control:10,defense:10,iq:10};
+      G.history=[]; G.photo=null;
+      save(); updateStatus(); drawSpider(G.skills);
+      alert('リセットしました。');
+    }
   }
 
   function drawSpider(skills){
@@ -606,11 +834,12 @@
       items.forEach(h=>{
         const stars='⭐'.repeat(h.rating)+'☆'.repeat(5-h.rating);
         const planSummary=(h.menu||[]).map(m=>`・${m.title}（${m.minutes}分）`).join('\n');
+        const timeStr=h.time||'';
         const item=document.createElement('div');
         item.className='history-item';
         item.innerHTML=`
           <div class="history-item-head">
-            <span class="history-date">${h.date.replace(/-/g,'/')}</span>
+            <span class="history-date">${h.date.replace(/-/g,'/')}${timeStr?' '+timeStr:''}</span>
             <span>${stars}</span>
           </div>
           <div class="history-plan">${planSummary}</div>
@@ -721,9 +950,10 @@
     G.sessions++; G.totalMinutes+=G.duration;
     const now=new Date();
     const date=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+    const time=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
     const memo=document.getElementById('memo')?.value.trim()||'';
     G.history.push({
-      date, rating:G.rating, memo,
+      date, time, rating:G.rating, memo,
       menu:(G.plan?.menu||[]).map(m=>({title:m.title,minutes:m.minutes}))
     });
     const gains=G.plan?.skill_gains||{};
