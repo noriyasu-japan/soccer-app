@@ -29,18 +29,28 @@
     .global-tabs {
       position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
       width: 100%; max-width: 430px;
-      background: var(--black2); border-top: 1px solid var(--border);
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255,255,255,0.06);
       display: flex; z-index: 100; padding-bottom: env(safe-area-inset-bottom);
     }
     .gtab {
-      flex: 1; padding: 12px 4px 10px;
-      display: flex; flex-direction: column; align-items: center; gap: 4px;
-      cursor: pointer; transition: opacity 0.15s; border: none;
-      background: transparent; color: var(--gray); font-family: inherit;
+      flex: 1; padding: 10px 4px 12px;
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      cursor: pointer; border: none;
+      background: transparent; color: rgba(255,255,255,0.28);
+      font-family: inherit; transition: color 0.2s;
+      position: relative;
     }
-    .gtab .gtab-icon { font-size: 22px; line-height: 1; }
-    .gtab .gtab-label { font-size: 9px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+    .gtab-icon-wrap {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    .gtab svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .gtab-label { font-size: 9px; font-weight: 800; letter-spacing: 0.06em; }
     .gtab.on { color: var(--accent); }
+    .gtab.on .gtab-icon-wrap { background: rgba(0,232,122,0.12); }
 
     /* ── PAGE ── */
     .page { display: none; padding-bottom: 80px; }
@@ -442,34 +452,55 @@
     .pc-xp-label { font-size: 10px; font-weight: 800; color: rgba(0,0,0,0.6); white-space: nowrap; }
 
     /* ── ROADMAP ── */
-    .roadmap { display: flex; flex-direction: column; gap: 0; margin-bottom: 12px; }
+    .roadmap {
+      display: flex; flex-direction: column;
+      background: var(--black2); border: 1.5px solid var(--border);
+      border-radius: var(--radius); overflow: hidden; margin-bottom: 12px;
+    }
     .roadmap-item {
-      display: flex; align-items: center; gap: 12px;
-      padding: 10px 0; position: relative;
+      display: flex; align-items: center; gap: 14px;
+      padding: 12px 16px; position: relative;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
     }
-    .roadmap-item:not(:last-child)::after {
+    .roadmap-item:last-child { border-bottom: none; }
+    .roadmap-item.done { background: rgba(0,232,122,0.04); }
+    .roadmap-item.current {
+      background: linear-gradient(90deg, rgba(0,232,122,0.12) 0%, rgba(0,232,122,0.03) 100%);
+    }
+    .roadmap-item.current::before {
       content: ''; position: absolute;
-      left: 15px; top: 36px; width: 2px; height: calc(100% - 16px);
-      background: var(--gray2);
+      left: 0; top: 0; bottom: 0; width: 3px;
+      background: var(--accent);
+      border-radius: 0 2px 2px 0;
     }
-    .roadmap-item.done::after { background: var(--accent); }
     .roadmap-dot {
-      width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+      width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 14px; border: 2px solid var(--gray2);
-      background: var(--black3); position: relative; z-index: 1;
+      font-size: 13px; background: var(--black4);
+      border: 1.5px solid var(--gray2);
     }
-    .roadmap-item.done .roadmap-dot { border-color: var(--accent); background: rgba(0,232,122,0.1); }
+    .roadmap-item.done .roadmap-dot {
+      background: rgba(0,232,122,0.15); border-color: rgba(0,232,122,0.3);
+    }
     .roadmap-item.current .roadmap-dot {
-      border-color: var(--accent); background: var(--accent);
-      box-shadow: 0 0 16px rgba(0,232,122,0.5);
+      background: var(--accent); border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(0,232,122,0.4);
     }
     .roadmap-info { flex: 1; }
-    .roadmap-name { font-size: 13px; font-weight: 700; }
-    .roadmap-item.done .roadmap-name { color: var(--gray); }
-    .roadmap-item.current .roadmap-name { color: var(--accent); }
-    .roadmap-req { font-size: 10px; color: var(--gray); margin-top: 1px; }
-    .roadmap-check { font-size: 14px; }
+    .roadmap-name { font-size: 13px; font-weight: 700; color: var(--gray); }
+    .roadmap-item.done .roadmap-name { color: rgba(255,255,255,0.5); }
+    .roadmap-item.current .roadmap-name { color: var(--white); font-weight: 800; }
+    .roadmap-req { font-size: 10px; color: var(--gray2); margin-top: 2px; }
+    .roadmap-item.current .roadmap-req { color: var(--gray); }
+    .roadmap-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
+    .roadmap-badge {
+      font-size: 9px; font-weight: 800; padding: 2px 8px; border-radius: 10px;
+    }
+    .roadmap-badge.done { background: rgba(0,232,122,0.12); color: var(--accent); }
+    .roadmap-badge.current {
+      background: var(--accent); color: var(--black); letter-spacing: 0.04em;
+    }
+    .roadmap-badge.future { background: var(--black4); color: var(--gray2); }
 
     /* ── DANGER BUTTON ── */
     .btn-danger {
@@ -661,23 +692,23 @@
         </div>
         <!-- 中段：スキル6項目 -->
         <div class="pc-stats">
-          <div class="pc-stat"><span class="pc-stat-val" id="pcs-shoot">10</span><span class="pc-stat-label">SHT</span></div>
-          <div class="pc-stat"><span class="pc-stat-val" id="pcs-pass">10</span><span class="pc-stat-label">PAS</span></div>
-          <div class="pc-stat"><span class="pc-stat-val" id="pcs-dribble">10</span><span class="pc-stat-label">DRI</span></div>
-          <div class="pc-stat"><span class="pc-stat-val" id="pcs-control">10</span><span class="pc-stat-label">CTL</span></div>
-          <div class="pc-stat"><span class="pc-stat-val" id="pcs-defense">10</span><span class="pc-stat-label">DEF</span></div>
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-shoot">10</span><span class="pc-stat-label">シュート</span></div>
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-pass">10</span><span class="pc-stat-label">パス</span></div>
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-dribble">10</span><span class="pc-stat-label">ドリブル</span></div>
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-control">10</span><span class="pc-stat-label">トラップ</span></div>
+          <div class="pc-stat"><span class="pc-stat-val" id="pcs-defense">10</span><span class="pc-stat-label">守備</span></div>
           <div class="pc-stat"><span class="pc-stat-val" id="pcs-iq">10</span><span class="pc-stat-label">IQ</span></div>
         </div>
-        <!-- 下段：Sessions / Minutes -->
+        <!-- 下段：練習回数 / 練習時間 -->
         <div class="pc-session-row">
           <div class="pc-session-item">
             <span class="pc-session-val" id="stat-sessions">0</span>
-            <span class="pc-session-label">SESSIONS</span>
+            <span class="pc-session-label">練習回数</span>
           </div>
           <div class="pc-session-divider"></div>
           <div class="pc-session-item">
             <span class="pc-session-val" id="total-time">0</span>
-            <span class="pc-session-label">MINUTES</span>
+            <span class="pc-session-label">練習時間（分）</span>
           </div>
         </div>
         <!-- XPバー -->
@@ -692,12 +723,12 @@
 
       <!-- スパイダーチャート -->
       <div class="spider-card">
-        <div class="spider-title">Player Ability</div>
+        <div class="spider-title">選手能力チャート</div>
         <svg id="spider" viewBox="0 0 220 220" width="100%" style="max-width:220px"></svg>
       </div>
 
       <!-- ランクロードマップ -->
-      <div class="sec">Career Roadmap</div>
+      <div class="sec">キャリアロードマップ</div>
       <div class="roadmap" id="roadmap"></div>
 
       <!-- リセット -->
@@ -717,19 +748,27 @@
   <!-- グローバルタブバー -->
   <nav class="global-tabs">
     <button class="gtab on" onclick="goPage('setup')">
-      <span class="gtab-icon">⚙️</span>
+      <div class="gtab-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </div>
       <span class="gtab-label">設定</span>
     </button>
     <button class="gtab" onclick="goPage('plan')">
-      <span class="gtab-icon">📋</span>
+      <div class="gtab-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="2"/><path d="M9 12h6M9 16h4"/></svg>
+      </div>
       <span class="gtab-label">プラン</span>
     </button>
     <button class="gtab" onclick="goPage('status')">
-      <span class="gtab-icon">📊</span>
+      <div class="gtab-icon-wrap">
+        <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
       <span class="gtab-label">ステータス</span>
     </button>
     <button class="gtab" onclick="goPage('history')">
-      <span class="gtab-icon">📅</span>
+      <div class="gtab-icon-wrap">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
+      </div>
       <span class="gtab-label">履歴</span>
     </button>
   </nav>
@@ -851,14 +890,19 @@
       const current=currentMin>=rank.min && (!next||currentMin<next.min);
       const div=document.createElement('div');
       div.className='roadmap-item'+(done&&!current?' done':current?' current':'');
-      const req=rank.min===0?'スタート':`${rank.min}分から`;
+      const req=rank.min===0?'スタート地点':`練習時間 ${rank.min}分から`;
+      const badge=current
+        ?'<span class="roadmap-badge current">今ここ</span>'
+        :done
+        ?'<span class="roadmap-badge done">✓ 達成</span>'
+        :'<span class="roadmap-badge future">未達成</span>';
       div.innerHTML=`
         <div class="roadmap-dot">${rank.name.split(' ')[0]}</div>
         <div class="roadmap-info">
           <div class="roadmap-name">${rank.name}</div>
           <div class="roadmap-req">${req}</div>
         </div>
-        <div class="roadmap-check">${current?'▶':done?'✅':''}</div>`;
+        <div class="roadmap-right">${badge}</div>`;
       el.appendChild(div);
     });
   }
@@ -869,6 +913,18 @@
     document.getElementById('xp-total').textContent=G.xp;
     renderPlayerCard();
     renderRoadmap();
+  }
+
+  function confirmPlanReset(){
+    if(confirm('現在のプランをリセットします。よろしいですか？')){
+      G.plan=null; G.rating=0; save();
+      document.getElementById('plan-content').innerHTML=`
+        <div class="no-plan">
+          <div class="no-plan-emoji">⚽</div>
+          <div class="no-plan-h">プランをリセットしました</div>
+          <div class="no-plan-s">「設定」タブから新しいプランを生成してください</div>
+        </div>`;
+    }
   }
 
   function confirmReset(){
@@ -1005,7 +1061,10 @@
       </div>
       <button class="btn btn-primary" id="btn-done" style="display:none;margin-top:4px" onclick="complete()">完了して記録する 🎉</button>
     </div>
-    <button class="btn btn-secondary" onclick="goPage('setup')">次のトレーニング設定へ →</button>`;
+    <div style="display:flex;gap:8px;margin-top:4px">
+      <button class="btn btn-secondary" style="flex:1" onclick="goPage('setup')">次のトレーニング設定へ →</button>
+      <button class="btn btn-danger" style="flex:0 0 auto;width:auto;padding:16px 14px;margin-top:0;font-size:13px;white-space:nowrap" onclick="confirmPlanReset()">プランをリセット</button>
+    </div>`;
     document.getElementById('plan-content').innerHTML=html;
 
     // 星イベント再バインド
