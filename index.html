@@ -113,10 +113,33 @@
     .chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .chip {
       padding: 8px 16px; border-radius: 20px;
-      border: 1.5px solid var(--gray2); background: transparent;
+      border: 1px solid var(--gray2); background: transparent;
       color: var(--gray); font-size: 13px; font-family: inherit;
       font-weight: 600; cursor: pointer; transition: all 0.15s; user-select: none;
     }
+    /* 得意チップ：緑系の薄いグラデーション */
+    .chip-strength {
+      background: linear-gradient(135deg, rgba(0,232,122,0.06) 0%, rgba(0,184,95,0.03) 100%);
+      border-color: rgba(0,232,122,0.2);
+      color: rgba(0,232,122,0.7);
+    }
+    .chip-strength.on-g {
+      background: var(--accent); color: var(--black);
+      border-color: var(--accent);
+      box-shadow: 0 0 12px rgba(0,232,122,0.3);
+    }
+    /* 苦手チップ：赤系の薄いグラデーション */
+    .chip-weakness {
+      background: linear-gradient(135deg, rgba(255,59,107,0.06) 0%, rgba(200,20,60,0.03) 100%);
+      border-color: rgba(255,59,107,0.2);
+      color: rgba(255,100,130,0.7);
+    }
+    .chip-weakness.on-r {
+      background: var(--accent2); color: var(--white);
+      border-color: var(--accent2);
+      box-shadow: 0 0 12px rgba(255,59,107,0.3);
+    }
+    /* 後方互換 */
     .chip.on-g { background: var(--accent); color: var(--black); border-color: var(--accent); }
     .chip.on-r { background: var(--accent2); color: var(--white); border-color: var(--accent2); }
 
@@ -340,13 +363,13 @@
     .player-card.theme-gold .pc-name,
     .player-card.theme-gold .pc-overall,
     .player-card.theme-gold .pc-stat-val,
-    .player-card.theme-gold .pc-session-val { color: rgba(0,0,0,0.85); }
+    .player-card.theme-gold .pc-session-val { color: #ffffff; }
     .player-card.theme-gold .pc-overall-label,
     .player-card.theme-gold .pc-stat-label,
     .player-card.theme-gold .pc-session-label,
-    .player-card.theme-gold .pc-xp-label { color: rgba(0,0,0,0.45); }
-    .player-card.theme-gold .pc-rank-badge { color: rgba(0,0,0,0.6); background: rgba(0,0,0,0.12); border-color: rgba(0,0,0,0.15); }
-    .player-card.theme-gold .pc-photo { border-color: rgba(255,240,140,0.7); }
+    .player-card.theme-gold .pc-xp-label { color: rgba(255,255,255,0.6); }
+    .player-card.theme-gold .pc-rank-badge { color: rgba(255,255,255,0.9); background: rgba(0,0,0,0.2); border-color: rgba(255,255,255,0.2); }
+    .player-card.theme-gold .pc-photo { border-color: rgba(255,255,255,0.7); }
     /* レインボー（100） */
     @keyframes rainbow-bg {
       0%   { background-position: 0% 50%; }
@@ -408,13 +431,13 @@
       padding: 3px 10px; border-radius: 10px; display: inline-block;
       margin-bottom: 6px; letter-spacing: 0.02em;
     }
-    .pc-name { font-size: 20px; font-weight: 900; letter-spacing: -0.01em; margin-bottom: 6px; color: rgba(0,0,0,0.85); }
+    .pc-name { font-size: 20px; font-weight: 900; letter-spacing: -0.01em; margin-bottom: 6px; color: #ffffff; text-shadow: 0 1px 8px rgba(0,0,0,0.5); }
     .pc-overall {
-      font-size: 52px; font-weight: 900; color: rgba(0,0,0,0.85);
+      font-size: 52px; font-weight: 900; color: #ffffff;
       line-height: 1; letter-spacing: -0.03em;
-      text-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      text-shadow: 0 2px 16px rgba(0,0,0,0.4);
     }
-    .pc-overall-label { font-size: 10px; font-weight: 800; color: rgba(0,0,0,0.45); letter-spacing: 0.15em; align-self: flex-end; padding-bottom: 6px; }
+    .pc-overall-label { font-size: 10px; font-weight: 800; color: rgba(255,255,255,0.7); letter-spacing: 0.15em; align-self: flex-end; padding-bottom: 6px; text-shadow: 0 1px 4px rgba(0,0,0,0.4); }
     /* スキル6項目 */
     .pc-stats {
       display: grid; grid-template-columns: repeat(6, 1fr);
@@ -600,26 +623,26 @@
       <div class="field">
         <span class="field-label">得意なこと（複数可）</span>
         <div class="chips" id="strengths">
-          <div class="chip" data-v="ドリブル">ドリブル</div>
-          <div class="chip" data-v="パス">パス</div>
-          <div class="chip" data-v="シュート">シュート</div>
-          <div class="chip" data-v="トラップ">トラップ</div>
-          <div class="chip" data-v="守備">守備</div>
-          <div class="chip" data-v="動き出し">動き出し</div>
-          <div class="chip" data-v="まだわからない">わからない</div>
+          <div class="chip chip-strength" data-v="ドリブル">ドリブル</div>
+          <div class="chip chip-strength" data-v="パス">パス</div>
+          <div class="chip chip-strength" data-v="シュート">シュート</div>
+          <div class="chip chip-strength" data-v="トラップ">トラップ</div>
+          <div class="chip chip-strength" data-v="守備">守備</div>
+          <div class="chip chip-strength" data-v="動き出し">動き出し</div>
+          <div class="chip chip-strength" data-v="まだわからない">わからない</div>
         </div>
       </div>
       <div class="field" style="margin-top:8px">
         <span class="field-label">苦手なこと（複数可）</span>
         <div class="chips" id="weaknesses">
-          <div class="chip" data-v="ドリブル">ドリブル</div>
-          <div class="chip" data-v="パス">パス</div>
-          <div class="chip" data-v="シュート">シュート</div>
-          <div class="chip" data-v="トラップ">トラップ</div>
-          <div class="chip" data-v="守備">守備</div>
-          <div class="chip" data-v="判断の速さ">判断スピード</div>
-          <div class="chip" data-v="ポジショニング">ポジショニング</div>
-          <div class="chip" data-v="特になし">特になし</div>
+          <div class="chip chip-weakness" data-v="ドリブル">ドリブル</div>
+          <div class="chip chip-weakness" data-v="パス">パス</div>
+          <div class="chip chip-weakness" data-v="シュート">シュート</div>
+          <div class="chip chip-weakness" data-v="トラップ">トラップ</div>
+          <div class="chip chip-weakness" data-v="守備">守備</div>
+          <div class="chip chip-weakness" data-v="判断の速さ">判断スピード</div>
+          <div class="chip chip-weakness" data-v="ポジショニング">ポジショニング</div>
+          <div class="chip chip-weakness" data-v="特になし">特になし</div>
         </div>
       </div>
       <div class="sec">目標・あこがれ</div>
@@ -779,7 +802,7 @@
     {name:'シントトロイデン',min:7000,icon:'🇧🇪'},
     {name:'5大リーグ（サブ）',min:8000,icon:'🌍'},
     {name:'5大リーグ（スタメン）',min:9000,icon:'⭐'},
-    {name:'バロンドール', min:10000, icon:'👟'},
+    {name:'バロンドール', min:10000, icon:'🏆'},
   ];
   const SKILLS=['shoot','pass','dribble','control','defense','iq'];
   const SKILL_LABELS={shoot:'シュート',pass:'パス',dribble:'ドリブル',control:'トラップ',defense:'守備',iq:'サッカーIQ'};
