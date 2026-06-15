@@ -717,7 +717,7 @@
       <!-- スパイダーチャート -->
       <div class="spider-card">
         <div class="spider-title">選手能力チャート</div>
-        <svg id="spider" viewBox="0 0 220 220" width="100%" style="max-width:220px"></svg>
+        <svg id="spider" viewBox="0 0 260 260" width="100%" style="max-width:260px"></svg>
       </div>
 
       <!-- ランクロードマップ -->
@@ -769,11 +769,17 @@
 </div>
 <script>
   const RANKS=[
-    {name:'⚽ 草サッカー',min:0},{name:'🏘 地域リーグ',min:300},
-    {name:'🏟 都道府県リーグ',min:1000},{name:'🇯🇵 JFL',min:2000},
-    {name:'🥉 J3',min:3500},{name:'🥈 J2',min:5000},{name:'🥇 J1',min:6000},
-    {name:'🇧🇪 シントトロイデン',min:7000},{name:'🌍 5大リーグ（サブ）',min:8000},
-    {name:'⭐ 5大リーグ（スタメン）',min:9000},{name:'🏆 バロンドール',min:10000},
+    {name:'草サッカー',   min:0,     icon:'🌿'},
+    {name:'地域リーグ',   min:300,   icon:'🏘'},
+    {name:'都道府県リーグ',min:1000, icon:'🗾'},
+    {name:'JFL',         min:2000,  icon:'👕'},
+    {name:'J3',          min:3500,  icon:'🥉'},
+    {name:'J2',          min:5000,  icon:'🥈'},
+    {name:'J1',          min:6000,  icon:'🥇'},
+    {name:'シントトロイデン',min:7000,icon:'🇧🇪'},
+    {name:'5大リーグ（サブ）',min:8000,icon:'🌍'},
+    {name:'5大リーグ（スタメン）',min:9000,icon:'⭐'},
+    {name:'バロンドール', min:10000, icon:'👟'},
   ];
   const SKILLS=['shoot','pass','dribble','control','defense','iq'];
   const SKILL_LABELS={shoot:'シュート',pass:'パス',dribble:'ドリブル',control:'トラップ',defense:'守備',iq:'サッカーIQ'};
@@ -852,7 +858,7 @@
 
     document.getElementById('pc-name').textContent=G.name||'—';
     document.getElementById('pc-overall').textContent=overall;
-    document.getElementById('pc-rank-badge').textContent=rank.name;
+    document.getElementById('pc-rank-badge').textContent=rank.icon+' '+rank.name;
     document.getElementById('pcs-shoot').textContent=G.skills.shoot||10;
     document.getElementById('pcs-pass').textContent=G.skills.pass||10;
     document.getElementById('pcs-dribble').textContent=G.skills.dribble||10;
@@ -890,7 +896,7 @@
         ?'<span class="roadmap-badge done">✓ 達成</span>'
         :'<span class="roadmap-badge future">未達成</span>';
       div.innerHTML=`
-        <div class="roadmap-dot">${rank.name.split(' ')[0]}</div>
+        <div class="roadmap-dot">${rank.icon}</div>
         <div class="roadmap-info">
           <div class="roadmap-name">${rank.name}</div>
           <div class="roadmap-req">${req}</div>
@@ -933,45 +939,101 @@
   function drawSpider(skills){
     const svg=document.getElementById('spider');
     svg.innerHTML='';
-    const cx=110,cy=110,R=80;
-    const angles=SKILLS.map((_,i)=>(i/SKILLS.length)*Math.PI*2-Math.PI/2);
-    [0.25,0.5,0.75,1].forEach(ratio=>{
+    const W=260, H=260, cx=130, cy=130, R=95;
+    svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+
+    const n=SKILLS.length;
+    const angles=SKILLS.map((_,i)=>(i/n)*Math.PI*2-Math.PI/2);
+
+    // defs: グラデーション・フィルター
+    const defs=document.createElementNS('http://www.w3.org/2000/svg','defs');
+    defs.innerHTML=`
+      <radialGradient id="rg" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#00e87a" stop-opacity="0.35"/>
+        <stop offset="100%" stop-color="#00e87a" stop-opacity="0.05"/>
+      </radialGradient>
+      <filter id="glow">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      </filter>`;
+    svg.appendChild(defs);
+
+    // グリッド（同心多角形）
+    [0.25,0.5,0.75,1].forEach((ratio,ri)=>{
       const pts=angles.map(a=>`${cx+R*ratio*Math.cos(a)},${cy+R*ratio*Math.sin(a)}`).join(' ');
       const p=document.createElementNS('http://www.w3.org/2000/svg','polygon');
-      p.setAttribute('points',pts);p.setAttribute('fill','none');
-      p.setAttribute('stroke','rgba(255,255,255,0.07)');p.setAttribute('stroke-width','1');
+      p.setAttribute('points',pts);
+      p.setAttribute('fill', ri===3 ? 'rgba(255,255,255,0.02)' : 'none');
+      p.setAttribute('stroke', ri===3 ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.06)');
+      p.setAttribute('stroke-width','1');
       svg.appendChild(p);
     });
-    angles.forEach((a,i)=>{
+
+    // 軸線
+    angles.forEach(a=>{
       const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
-      ln.setAttribute('x1',cx);ln.setAttribute('y1',cy);
-      ln.setAttribute('x2',cx+R*Math.cos(a));ln.setAttribute('y2',cy+R*Math.sin(a));
-      ln.setAttribute('stroke','rgba(255,255,255,0.07)');ln.setAttribute('stroke-width','1');
+      ln.setAttribute('x1',cx); ln.setAttribute('y1',cy);
+      ln.setAttribute('x2',cx+R*Math.cos(a)); ln.setAttribute('y2',cy+R*Math.sin(a));
+      ln.setAttribute('stroke','rgba(255,255,255,0.08)'); ln.setAttribute('stroke-width','1');
       svg.appendChild(ln);
-      const lx=cx+(R+18)*Math.cos(a),ly=cy+(R+18)*Math.sin(a);
-      const tx=document.createElementNS('http://www.w3.org/2000/svg','text');
-      tx.setAttribute('x',lx);tx.setAttribute('y',ly);
-      tx.setAttribute('text-anchor','middle');tx.setAttribute('dominant-baseline','middle');
-      tx.setAttribute('font-size','9');tx.setAttribute('fill','#8a8a8a');tx.setAttribute('font-weight','700');
-      tx.textContent=SKILL_LABELS[SKILLS[i]];
-      svg.appendChild(tx);
     });
-    const pts=SKILLS.map((sk,i)=>{
+
+    // データポリゴン（塗り）
+    const dataPts=SKILLS.map((sk,i)=>{
       const v=Math.min(skills[sk]||10,100)/100;
       return `${cx+R*v*Math.cos(angles[i])},${cy+R*v*Math.sin(angles[i])}`;
     }).join(' ');
-    const poly=document.createElementNS('http://www.w3.org/2000/svg','polygon');
-    poly.setAttribute('points',pts);
-    poly.setAttribute('fill','rgba(0,232,122,0.18)');
-    poly.setAttribute('stroke','#00e87a');poly.setAttribute('stroke-width','2');
-    svg.appendChild(poly);
+    const fill=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    fill.setAttribute('points',dataPts);
+    fill.setAttribute('fill','url(#rg)');
+    fill.setAttribute('stroke','none');
+    svg.appendChild(fill);
+
+    // データポリゴン（線）
+    const stroke=document.createElementNS('http://www.w3.org/2000/svg','polygon');
+    stroke.setAttribute('points',dataPts);
+    stroke.setAttribute('fill','none');
+    stroke.setAttribute('stroke','#00e87a');
+    stroke.setAttribute('stroke-width','2');
+    stroke.setAttribute('filter','url(#glow)');
+    svg.appendChild(stroke);
+
+    // 頂点ドット＋ラベル
     SKILLS.forEach((sk,i)=>{
       const v=Math.min(skills[sk]||10,100)/100;
-      const c=document.createElementNS('http://www.w3.org/2000/svg','circle');
-      c.setAttribute('cx',cx+R*v*Math.cos(angles[i]));
-      c.setAttribute('cy',cy+R*v*Math.sin(angles[i]));
-      c.setAttribute('r','4');c.setAttribute('fill','#00e87a');
-      svg.appendChild(c);
+      const px=cx+R*v*Math.cos(angles[i]);
+      const py=cy+R*v*Math.sin(angles[i]);
+
+      // ドット外輪
+      const cOuter=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      cOuter.setAttribute('cx',px); cOuter.setAttribute('cy',py);
+      cOuter.setAttribute('r','5'); cOuter.setAttribute('fill','rgba(0,232,122,0.25)');
+      svg.appendChild(cOuter);
+      // ドット内
+      const cInner=document.createElementNS('http://www.w3.org/2000/svg','circle');
+      cInner.setAttribute('cx',px); cInner.setAttribute('cy',py);
+      cInner.setAttribute('r','3'); cInner.setAttribute('fill','#00e87a');
+      svg.appendChild(cInner);
+
+      // ラベル位置（軸の外側）
+      const lx=cx+(R+20)*Math.cos(angles[i]);
+      const ly=cy+(R+20)*Math.sin(angles[i]);
+
+      // スキル名
+      const tName=document.createElementNS('http://www.w3.org/2000/svg','text');
+      tName.setAttribute('x',lx); tName.setAttribute('y',ly-5);
+      tName.setAttribute('text-anchor','middle'); tName.setAttribute('dominant-baseline','middle');
+      tName.setAttribute('font-size','8'); tName.setAttribute('fill','#8a8a8a'); tName.setAttribute('font-weight','700');
+      tName.textContent=SKILL_LABELS[sk];
+      svg.appendChild(tName);
+
+      // スキル数値
+      const tVal=document.createElementNS('http://www.w3.org/2000/svg','text');
+      tVal.setAttribute('x',lx); tVal.setAttribute('y',ly+7);
+      tVal.setAttribute('text-anchor','middle'); tVal.setAttribute('dominant-baseline','middle');
+      tVal.setAttribute('font-size','10'); tVal.setAttribute('fill','#00e87a'); tVal.setAttribute('font-weight','900');
+      tVal.textContent=skills[sk]||10;
+      svg.appendChild(tVal);
     });
   }
 
@@ -1054,9 +1116,9 @@
       </div>
       <button class="btn btn-primary" id="btn-done" style="display:none;margin-top:4px" onclick="complete()">完了して記録する 🎉</button>
     </div>
-    <div style="display:flex;gap:8px;margin-top:4px">
-      <button class="btn btn-secondary" style="flex:1" onclick="goPage('setup')">次のトレーニング設定へ →</button>
-      <button class="btn btn-danger" style="flex:0 0 auto;width:auto;padding:16px 14px;margin-top:0;font-size:13px;white-space:nowrap" onclick="confirmPlanReset()">プランをリセット</button>
+    <div style="display:flex;gap:8px;margin-top:4px;align-items:stretch">
+      <button class="btn btn-secondary" style="flex:1;margin-top:0" onclick="goPage('setup')">次のトレーニング設定へ →</button>
+      <button class="btn btn-danger" style="flex:0 0 auto;width:auto;padding:0 16px;margin-top:0;font-size:13px;white-space:nowrap" onclick="confirmPlanReset()">プランをリセット</button>
     </div>`;
     document.getElementById('plan-content').innerHTML=html;
 
