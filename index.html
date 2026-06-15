@@ -15,7 +15,7 @@
       --accent: #00e87a; --accent-dark: #00b85f;
       --accent2: #ff3b6b; --accent3: #3b8bff;
       --border: rgba(255,255,255,0.08);
-      --radius: 16px; --radius-sm: 10px;
+      --radius: 8px; --radius-sm: 6px;
     }
     html { background: var(--black); }
     body {
@@ -140,7 +140,7 @@
     }
     .btn:active { transform: scale(0.97); }
     .btn-primary { background: var(--accent); color: var(--black); }
-    .btn-secondary { background: var(--black3); color: var(--gray); border: 1.5px solid var(--gray2); margin-top: 10px; }
+    .btn-secondary { background: var(--black3); color: var(--gray); border: 1.5px solid var(--gray2); margin-top: 0; }
 
     /* ── RANK CARD ── */
     .rank-card {
@@ -276,8 +276,11 @@
     .xp-big { font-size: 60px; font-weight: 900; color: var(--accent); }
     .done-sub { font-size: 13px; color: var(--gray); margin-bottom: 1.5rem; }
     .gain-card { background: var(--black2); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 1.5rem; text-align: left; }
-    .gain-title { font-size: 10px; font-weight: 800; color: var(--accent); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 8px; }
-    .gain-item { font-size: 14px; font-weight: 700; padding: 3px 0; }
+    .gain-title { font-size: 11px; font-weight: 800; color: var(--gray); letter-spacing: 0.1em; margin-bottom: 10px; }
+    .gain-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .gain-item { background: rgba(0,232,122,0.08); border: 1px solid rgba(0,232,122,0.15); border-radius: var(--radius-sm); padding: 8px 4px; text-align: center; }
+    .gain-item-val { font-size: 20px; font-weight: 900; color: var(--accent); display: block; }
+    .gain-item-label { font-size: 9px; font-weight: 700; color: var(--gray); margin-top: 2px; display: block; }
 
     /* ── ERR ── */
     .err { background: rgba(255,59,107,0.1); border: 1.5px solid rgba(255,59,107,0.3); border-radius: var(--radius-sm); padding: 12px 14px; font-size: 13px; color: var(--accent2); margin-top: 12px; line-height: 1.5; }
@@ -286,13 +289,11 @@
     .player-card {
       position: relative; border-radius: var(--radius);
       overflow: hidden; padding: 20px 16px 14px;
-      transition: background 0.6s, border-color 0.6s, box-shadow 0.6s;
+      transition: background 0.6s;
     }
     /* ライトブルー（〜24） */
     .player-card.theme-blue {
       background: linear-gradient(160deg, #1a4a7a 0%, #2a6aaa 30%, #1a3a6a 60%, #2a5a9a 80%, #0a2a5a 100%);
-      border: 1.5px solid rgba(80,160,255,0.5);
-      box-shadow: 0 0 40px rgba(40,120,255,0.15), inset 0 1px 0 rgba(140,200,255,0.2);
     }
     .player-card.theme-blue .pc-name,
     .player-card.theme-blue .pc-overall,
@@ -307,8 +308,6 @@
     /* ブロンズ（25〜49） */
     .player-card.theme-bronze {
       background: linear-gradient(160deg, #5a3010 0%, #8a5020 30%, #6a3a10 60%, #9a6030 80%, #4a2808 100%);
-      border: 1.5px solid rgba(180,110,40,0.6);
-      box-shadow: 0 0 40px rgba(160,90,20,0.2), inset 0 1px 0 rgba(220,160,80,0.3);
     }
     .player-card.theme-bronze .pc-name,
     .player-card.theme-bronze .pc-overall,
@@ -323,8 +322,6 @@
     /* シルバー（50〜74） */
     .player-card.theme-silver {
       background: linear-gradient(160deg, #3a3a3a 0%, #6a6a6a 30%, #4a4a4a 60%, #7a7a7a 80%, #2a2a2a 100%);
-      border: 1.5px solid rgba(180,180,180,0.5);
-      box-shadow: 0 0 40px rgba(160,160,160,0.15), inset 0 1px 0 rgba(220,220,220,0.25);
     }
     .player-card.theme-silver .pc-name,
     .player-card.theme-silver .pc-overall,
@@ -339,8 +336,6 @@
     /* ゴールド（75〜99） */
     .player-card.theme-gold {
       background: linear-gradient(160deg, #c9a84c 0%, #f0d060 30%, #b8922a 60%, #e8c040 80%, #a07820 100%);
-      border: 1.5px solid rgba(240,208,80,0.6);
-      box-shadow: 0 0 40px rgba(200,160,40,0.25), inset 0 1px 0 rgba(255,240,140,0.4);
     }
     .player-card.theme-gold .pc-name,
     .player-card.theme-gold .pc-overall,
@@ -366,8 +361,6 @@
       background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #c77dff, #ff6b6b);
       background-size: 400% 400%;
       animation: rainbow-bg 3s ease infinite;
-      border: 1.5px solid rgba(255,255,255,0.6);
-      box-shadow: 0 0 40px rgba(255,255,255,0.3), 0 0 80px rgba(200,100,255,0.2);
     }
     .player-card.theme-rainbow .player-card-bg {
       background: linear-gradient(135deg, rgba(255,255,255,0.15), rgba(255,255,255,0.05));
@@ -1141,8 +1134,15 @@
     document.getElementById('lv-msg').textContent=next
       ?`次のランク「${next.name}」まであと${next.min-G.totalMinutes}分`:'🏆 最高ランク達成！';
     const gc=document.getElementById('gain-card');
-    gc.innerHTML=`<div class="gain-title">Skill Gains</div>`+
-      (gainLines.length?gainLines.map(l=>`<div class="gain-item">✦ ${l}</div>`).join(''):'<div style="font-size:13px;color:#8a8a8a">次回も継続しよう</div>');
+    if(gainLines.length){
+      const gridItems=gainLines.map(l=>{
+        const [label,val]=l.split(' +');
+        return `<div class="gain-item"><span class="gain-item-val">+${val}</span><span class="gain-item-label">${label}</span></div>`;
+      }).join('');
+      gc.innerHTML=`<div class="gain-title">スキルアップ</div><div class="gain-grid">${gridItems}</div>`;
+    } else {
+      gc.innerHTML=`<div class="gain-title">スキルアップ</div><div style="font-size:13px;color:#8a8a8a;padding:4px 0">次回も継続しよう</div>`;
+    }
     document.getElementById('s-done').style.display='block';
     window.scrollTo(0,0);
   }
